@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <meta name="description" content="YouTube PWA - Watch YouTube in a lightweight Progressive Web App">
     <meta name="theme-color" content="#000000">
     
-    <!-- iOS Fullscreen Mode -->
+    <!-- iOS PWA Support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="YouTube PWA">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 
     <title>YouTube PWA</title>
 
@@ -41,6 +42,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
         }
 
@@ -49,17 +51,28 @@
             height: 100vh;
             border: none;
         }
+
+        /* Force Fullscreen for iOS */
+        html, body {
+            touch-action: manipulation;
+            overscroll-behavior: none;
+        }
     </style>
 </head>
 <body>
     <!-- YouTube Wrapper -->
-    <iframe id="youtubeFrame" src="https://m.youtube.com/" allowfullscreen></iframe>
+    <iframe id="youtubeFrame" src="https://www.youtube.com/embed/?autoplay=1&playsinline=1" allowfullscreen></iframe>
 
     <script>
-        // Force Fullscreen Mode for PWA
         document.addEventListener('DOMContentLoaded', () => {
+            // Detect PWA Mode
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 document.documentElement.requestFullscreen().catch(err => console.log("Fullscreen not supported:", err));
+            }
+
+            // Detect iOS Safari
+            if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+                document.getElementById('youtubeFrame').src = "https://m.youtube.com/";
             }
         });
     </script>
