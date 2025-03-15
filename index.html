@@ -50,6 +50,9 @@
             width: 100vw;
             height: 100vh;
             border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         /* Force Fullscreen for iOS */
@@ -61,19 +64,31 @@
 </head>
 <body>
     <!-- YouTube Wrapper -->
-    <iframe id="youtubeFrame" src="https://www.youtube.com/embed/?autoplay=1&playsinline=1" allowfullscreen></iframe>
+    <iframe id="youtubeFrame" src="https://m.youtube.com/" allowfullscreen></iframe>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Detect PWA Mode
+            let frame = document.getElementById('youtubeFrame');
+
+            // Detect PWA Mode and Request Fullscreen
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 document.documentElement.requestFullscreen().catch(err => console.log("Fullscreen not supported:", err));
             }
 
-            // Detect iOS Safari
+            // Detect Safari (iOS)
             if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-                document.getElementById('youtubeFrame').src = "https://m.youtube.com/";
+                frame.src = "https://m.youtube.com/";
             }
+
+            // Inject JavaScript for Full-Screen & Hide UI Elements
+            function injectYouTubeScript() {
+                let script = document.createElement('script');
+                script.src = 'https://raw.githubusercontent.com/your-username/Brave-YouTube-Fullscreen/main/youtube_fullscreen.js';
+                document.body.appendChild(script);
+            }
+
+            // Run script after YouTube loads
+            setTimeout(injectYouTubeScript, 3000);
         });
     </script>
 </body>
